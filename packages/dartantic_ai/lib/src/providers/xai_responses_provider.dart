@@ -109,7 +109,6 @@ class XAIResponsesProvider
         fileSearchConfig: options?.fileSearchConfig,
         webSearchConfig: options?.webSearchConfig,
         codeInterpreterConfig: options?.codeInterpreterConfig,
-        imageGenerationConfig: options?.imageGenerationConfig,
         mcpTools: options?.mcpTools,
       ),
     );

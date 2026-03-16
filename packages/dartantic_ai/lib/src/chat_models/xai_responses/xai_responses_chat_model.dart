@@ -120,7 +120,6 @@ class XAIResponsesChatModel extends ChatModel<XAIResponsesChatModelOptions> {
       fileSearchConfig: context.fileSearchConfig,
       webSearchConfig: context.webSearchConfig,
       codeInterpreterConfig: context.codeInterpreterConfig,
-      imageGenerationConfig: context.imageGenerationConfig,
     ),
   ];
 
@@ -325,9 +324,6 @@ class XAIResponsesChatModel extends ChatModel<XAIResponsesChatModelOptions> {
       codeInterpreterConfig: _mapCodeConfigStatic(
         resolved.codeInterpreterConfig,
       ),
-      imageGenerationConfig: _mapImageGenConfigStatic(
-        resolved.imageGenerationConfig,
-      ),
     );
   }
 
@@ -430,35 +426,6 @@ class XAIResponsesChatModel extends ChatModel<XAIResponsesChatModelOptions> {
     return CodeInterpreterConfig(
       containerId: config.containerId,
       fileIds: config.fileIds,
-    );
-  }
-
-  static ImageGenerationConfig? _mapImageGenConfigStatic(
-    XAIImageGenerationConfig? config,
-  ) {
-    if (config == null) return null;
-    return ImageGenerationConfig(
-      partialImages: config.partialImages,
-      quality: switch (config.quality) {
-        XAIImageGenerationQuality.low => ImageGenerationQuality.low,
-        XAIImageGenerationQuality.medium => ImageGenerationQuality.medium,
-        XAIImageGenerationQuality.high => ImageGenerationQuality.high,
-        XAIImageGenerationQuality.auto => ImageGenerationQuality.auto,
-      },
-      size: switch (config.size) {
-        XAIImageGenerationSize.auto => ImageGenerationSize.auto,
-        XAIImageGenerationSize.square256 => ImageGenerationSize.square256,
-        XAIImageGenerationSize.square512 => ImageGenerationSize.square512,
-        XAIImageGenerationSize.square1024 => ImageGenerationSize.square1024,
-        XAIImageGenerationSize.landscape1536x1024 =>
-          ImageGenerationSize.landscape1536x1024,
-        XAIImageGenerationSize.landscape1792x1024 =>
-          ImageGenerationSize.landscape1792x1024,
-        XAIImageGenerationSize.portrait1024x1536 =>
-          ImageGenerationSize.portrait1024x1536,
-        XAIImageGenerationSize.portrait1024x1792 =>
-          ImageGenerationSize.portrait1024x1792,
-      },
     );
   }
 }

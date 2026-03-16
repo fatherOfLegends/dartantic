@@ -24,7 +24,6 @@ class XAIResponsesChatModelOptions extends ChatModelOptions {
     this.fileSearchConfig,
     this.webSearchConfig,
     this.codeInterpreterConfig,
-    this.imageGenerationConfig,
     this.mcpTools,
   });
 
@@ -81,9 +80,6 @@ class XAIResponsesChatModelOptions extends ChatModelOptions {
 
   /// Configuration for the `code_interpreter` tool.
   final XAICodeInterpreterConfig? codeInterpreterConfig;
-
-  /// Configuration for the `image_generation` tool.
-  final XAIImageGenerationConfig? imageGenerationConfig;
 
   /// Configuration for one or more remote MCP tools.
   final List<XAIMcpToolConfig>? mcpTools;
@@ -245,68 +241,6 @@ class XAICodeInterpreterConfig {
 
   /// File IDs to mount into the container.
   final List<String>? fileIds;
-}
-
-/// Image generation quality hint.
-enum XAIImageGenerationQuality {
-  /// Lower quality.
-  low,
-
-  /// Medium quality.
-  medium,
-
-  /// Highest quality.
-  high,
-
-  /// Provider-selected quality.
-  auto,
-}
-
-/// Image generation size hint.
-enum XAIImageGenerationSize {
-  /// Provider-selected size.
-  auto,
-
-  /// 256x256.
-  square256,
-
-  /// 512x512.
-  square512,
-
-  /// 1024x1024.
-  square1024,
-
-  /// 1536x1024.
-  landscape1536x1024,
-
-  /// 1792x1024.
-  landscape1792x1024,
-
-  /// 1024x1536.
-  portrait1024x1536,
-
-  /// 1024x1792.
-  portrait1024x1792,
-}
-
-/// Configuration for the xAI `image_generation` tool.
-@immutable
-class XAIImageGenerationConfig {
-  /// Creates an image generation configuration.
-  const XAIImageGenerationConfig({
-    this.partialImages = 0,
-    this.quality = XAIImageGenerationQuality.auto,
-    this.size = XAIImageGenerationSize.auto,
-  });
-
-  /// Number of partial preview images to stream.
-  final int partialImages;
-
-  /// Output quality hint.
-  final XAIImageGenerationQuality quality;
-
-  /// Output size hint.
-  final XAIImageGenerationSize size;
 }
 
 /// Configuration for a remote MCP server tool.
