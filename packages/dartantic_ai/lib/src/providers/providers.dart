@@ -5,3 +5,5 @@ export 'mistral_provider.dart';
 export 'ollama_provider.dart';
 export 'openai_provider.dart';
 export 'openai_responses_provider.dart';
+export 'xai_provider.dart';
+export 'xai_responses_provider.dart';

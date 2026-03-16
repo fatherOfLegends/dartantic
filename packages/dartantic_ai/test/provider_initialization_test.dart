@@ -22,6 +22,8 @@ void main() {
       expect(() => Agent.getProvider('mistral'), returnsNormally);
       expect(() => Agent.getProvider('anthropic'), returnsNormally);
       expect(() => Agent.getProvider('cohere'), returnsNormally);
+      expect(() => Agent.getProvider('xai'), returnsNormally);
+      expect(() => Agent.getProvider('xai-responses'), returnsNormally);
 
       // Should be able to access provider properties
       final googleProvider = Agent.getProvider('google');
@@ -47,6 +49,33 @@ void main() {
             (e) => e.message,
             'message',
             contains('GEMINI_API_KEY is required'),
+          ),
+        ),
+      );
+    });
+
+    test('xAI providers require XAI_API_KEY to create chat models', () {
+      final xaiProvider = Agent.getProvider('xai');
+      final xaiResponsesProvider = Agent.getProvider('xai-responses');
+
+      expect(
+        xaiProvider.createChatModel,
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            contains('XAI_API_KEY is required'),
+          ),
+        ),
+      );
+
+      expect(
+        xaiResponsesProvider.createChatModel,
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            contains('XAI_API_KEY is required'),
           ),
         ),
       );

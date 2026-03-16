@@ -21,11 +21,20 @@ void main() {
     group('chat provider selection', () {
       test('finds providers by exact name', () {
         expect(Agent.getProvider('openai').name, equals('openai'));
+        expect(
+          Agent.getProvider('openai-responses').name,
+          equals('openai-responses'),
+        );
         expect(Agent.getProvider('anthropic').name, equals('anthropic'));
         expect(Agent.getProvider('google').name, equals('google'));
         expect(Agent.getProvider('mistral').name, equals('mistral'));
         expect(Agent.getProvider('ollama').name, equals('ollama'));
         expect(Agent.getProvider('cohere').name, equals('cohere'));
+        expect(Agent.getProvider('xai').name, equals('xai'));
+        expect(
+          Agent.getProvider('xai-responses').name,
+          equals('xai-responses'),
+        );
       });
 
       test('finds providers by aliases', () {
@@ -37,6 +46,10 @@ void main() {
         expect(
           Agent.getProvider('gemini').name,
           equals(Agent.getProvider('google').name),
+        );
+        expect(
+          Agent.getProvider('grok').name,
+          equals(Agent.getProvider('xai').name),
         );
       });
 
@@ -95,8 +108,8 @@ void main() {
       test('lists all chat providers', () {
         final providers = Agent.allProviders;
         expect(providers, isNotEmpty);
-        // At least 7 providers available
-        expect(providers.length, greaterThanOrEqualTo(7));
+        // At least 9 providers available
+        expect(providers.length, greaterThanOrEqualTo(9));
 
         // Verify key providers are included
         final providerNames = providers.map((p) => p.name).toSet();
@@ -106,6 +119,8 @@ void main() {
         expect(providerNames, contains('mistral'));
         expect(providerNames, contains('ollama'));
         expect(providerNames, contains('cohere'));
+        expect(providerNames, contains('xai'));
+        expect(providerNames, contains('xai-responses'));
       });
 
       test('lists all embeddings providers', () {
@@ -167,6 +182,11 @@ void main() {
         expect(Agent.getProvider('google').displayName, contains('Google'));
         expect(Agent.getProvider('mistral').displayName, equals('Mistral'));
         expect(Agent.getProvider('ollama').displayName, equals('Ollama'));
+        expect(Agent.getProvider('xai').displayName, equals('xAI'));
+        expect(
+          Agent.getProvider('xai-responses').displayName,
+          equals('xAI Responses'),
+        );
       });
 
       test('embeddings providers have descriptive display names', () {

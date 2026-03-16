@@ -83,5 +83,37 @@ void main() {
 
       model.dispose();
     });
+
+    test('xAI Responses media mapping includes standard metadata', () {
+      final model = XAIResponsesMediaGenerationModel(
+        name: 'grok-image',
+        defaultOptions: const XAIResponsesMediaGenerationModelOptions(),
+        apiKey: 'fake',
+        httpClient: _NeverHttpClient(),
+      );
+
+      final result = model.mapChunkForTest(
+        ChatResult<ChatMessage>(
+          output: ChatMessage.model('output'),
+          messages: [
+            ChatMessage(
+              role: ChatMessageRole.model,
+              parts: const [TextPart('hello')],
+            ),
+          ],
+          finishReason: FinishReason.unspecified,
+        ),
+        generationMode: 'image_generation',
+        requestedMimeTypes: const ['image/png'],
+        chunkIndex: 4,
+        accumulatedMessages: const [],
+      );
+
+      expect(result.metadata['generation_mode'], 'image_generation');
+      expect(result.metadata['requested_mime_types'], ['image/png']);
+      expect(result.metadata['chunk_index'], 4);
+
+      model.dispose();
+    });
   });
 }

@@ -97,6 +97,23 @@ const providerTestCaps = <String, Set<ProviderTestCaps>>{
     // calls: validate_code(code="(default_api.get_secret_code())")
     ProviderTestCaps.chatVision,
   },
+  'xai': {
+    ProviderTestCaps.chat,
+    ProviderTestCaps.multiToolCalls,
+    ProviderTestCaps.typedOutput,
+    ProviderTestCaps.typedOutputWithTools,
+    ProviderTestCaps.chatVision,
+    ProviderTestCaps.mediaGeneration,
+  },
+  'xai-responses': {
+    ProviderTestCaps.chat,
+    ProviderTestCaps.multiToolCalls,
+    ProviderTestCaps.typedOutput,
+    ProviderTestCaps.typedOutputWithTools,
+    ProviderTestCaps.chatVision,
+    ProviderTestCaps.thinking,
+    ProviderTestCaps.mediaGeneration,
+  },
 };
 
 /// Returns the test capabilities for the given provider name, or an empty set
