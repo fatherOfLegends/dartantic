@@ -51,6 +51,10 @@ void main() {
           Agent.getProvider('grok').name,
           equals(Agent.getProvider('xai').name),
         );
+        expect(
+          Agent.getProvider('grok-responses').name,
+          equals(Agent.getProvider('xai-responses').name),
+        );
       });
 
       test('throws on unknown provider name', () {

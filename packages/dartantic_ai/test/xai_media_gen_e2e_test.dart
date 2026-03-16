@@ -125,10 +125,21 @@ void main() {
         );
         final results = await stream.toList();
         expect(results, isNotEmpty);
+        expect(results.last.isComplete, isTrue);
         final hasOutput = results.any(
           (r) => r.assets.isNotEmpty || r.links.isNotEmpty,
         );
         expect(hasOutput, isTrue, reason: 'Expected a video asset or link');
+        final pendingCount = results
+            .where((r) => r.metadata['status'] == 'pending')
+            .length;
+        if (results.length > 1) {
+          expect(
+            pendingCount,
+            greaterThan(0),
+            reason: 'Video polling should emit pending status chunks.',
+          );
+        }
       },
       skip: !hasXaiKey ? 'Requires XAI_API_KEY' : false,
       timeout: const Timeout(Duration(minutes: 4)),

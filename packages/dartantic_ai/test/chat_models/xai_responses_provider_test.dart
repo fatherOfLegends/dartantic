@@ -10,8 +10,11 @@ void main() {
       expect(provider.displayName, equals('xAI Responses'));
       expect(provider.apiKeyName, equals('XAI_API_KEY'));
       expect(provider.defaultModelNames[ModelKind.chat], isNotNull);
+      expect(
+        provider.defaultModelNames[ModelKind.media],
+        equals(XAIResponsesProvider.defaultMediaModel),
+      );
       expect(provider.defaultModelNames[ModelKind.embeddings], isNull);
-      expect(provider.defaultModelNames[ModelKind.media], isNotNull);
     });
 
     test('creates chat model using xAI base URL by default', () {
@@ -29,6 +32,21 @@ void main() {
 
       final mediaModel = provider.createMediaModel();
       expect(mediaModel, isA<XAIResponsesMediaGenerationModel>());
+      expect(mediaModel.name, equals(XAIResponsesProvider.defaultMediaModel));
+    });
+
+    test('requires api key to create media model', () {
+      final provider = XAIResponsesProvider(apiKey: '');
+      expect(
+        provider.createMediaModel,
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            contains('XAI_API_KEY is required'),
+          ),
+        ),
+      );
     });
   });
 }

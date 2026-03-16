@@ -83,5 +83,19 @@ void main() {
 
       expect(mapped.serverSideTools, isEmpty);
     });
+
+    test('keeps image generation mapping in chat path', () {
+      final mapped = XAIResponsesChatModel.toOpenAIOptionsForTesting(
+        const XAIResponsesChatModelOptions(
+          serverSideTools: {XAIServerSideTool.imageGeneration},
+        ),
+      );
+
+      // Chat mapping remains independent from native media endpoint routing.
+      expect(
+        mapped.serverSideTools,
+        contains(OpenAIServerSideTool.imageGeneration),
+      );
+    });
   });
 }
