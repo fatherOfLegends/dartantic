@@ -1,5 +1,6 @@
 import 'package:dartantic_interface/dartantic_interface.dart';
 
+import '../chat_models/openai_chat/openai_chat_options.dart';
 import '../embeddings_models/openai_embeddings/openai_embeddings_model_options.dart';
 import '../platform/platform.dart';
 import 'openai_provider.dart';
@@ -32,6 +33,29 @@ class XAIProvider extends OpenAIProvider {
 
   /// Default base URL for the xAI API.
   static final defaultBaseUrl = Uri.parse('https://api.x.ai/v1');
+
+  @override
+  ChatModel<OpenAIChatOptions> createChatModel({
+    String? name,
+    List<Tool>? tools,
+    double? temperature,
+    bool enableThinking = false,
+    OpenAIChatOptions? options,
+  }) {
+    if (temperature != null || options?.temperature != null) {
+      throw UnsupportedError(
+        '$providerDisplayName provider does not support temperature. '
+        'Remove temperature and rely on model defaults.',
+      );
+    }
+    return super.createChatModel(
+      name: name,
+      tools: tools,
+      temperature: temperature,
+      enableThinking: enableThinking,
+      options: options,
+    );
+  }
 
   @override
   EmbeddingsModel<OpenAIEmbeddingsModelOptions> createEmbeddingsModel({

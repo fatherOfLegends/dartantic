@@ -73,23 +73,27 @@ class XAIResponsesProvider
     XAIResponsesChatModelOptions? options,
   }) {
     _validateApiKeyPresence();
+    if (temperature != null || options?.temperature != null) {
+      throw UnsupportedError(
+        '$providerDisplayName provider does not support temperature. '
+        'Remove temperature and rely on model defaults.',
+      );
+    }
     final modelName = name ?? defaultModelNames[ModelKind.chat]!;
 
     _logger.info(
       'Creating xAI Responses chat model: $modelName '
-      'with ${(tools ?? const []).length} tools, temp: $temperature, '
+      'with ${(tools ?? const []).length} tools, '
       'thinking: $enableThinking',
     );
 
     return XAIResponsesChatModel(
       name: modelName,
       tools: tools,
-      temperature: temperature,
       apiKey: apiKey,
       baseUrl: baseUrl ?? defaultBaseUrl,
       headers: headers,
       defaultOptions: XAIResponsesChatModelOptions(
-        temperature: temperature ?? options?.temperature,
         topP: options?.topP,
         maxOutputTokens: options?.maxOutputTokens,
         store: options?.store ?? true,

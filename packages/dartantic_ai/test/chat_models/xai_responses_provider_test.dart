@@ -48,5 +48,21 @@ void main() {
         ),
       );
     });
+
+    test('rejects temperature for chat model creation', () {
+      final provider = XAIResponsesProvider(apiKey: 'test-key');
+
+      expect(
+        () => provider.createChatModel(temperature: 0.2),
+        throwsA(isA<UnsupportedError>()),
+      );
+
+      expect(
+        () => provider.createChatModel(
+          options: const XAIResponsesChatModelOptions(temperature: 0.2),
+        ),
+        throwsA(isA<UnsupportedError>()),
+      );
+    });
   });
 }

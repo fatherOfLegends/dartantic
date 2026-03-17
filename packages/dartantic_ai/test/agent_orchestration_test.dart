@@ -39,6 +39,10 @@ void main() {
       });
 
       runProviderTest('agent with temperature setting', (provider) async {
+        if (provider.name == 'xai-responses' || provider.name == 'xai') {
+          // These providers modern models don't support temperature
+          return;
+        }
         // Note: gpt-5 (default for openai-responses) is a reasoning model that
         // doesn't support the temperature parameter, so we use gpt-4o instead.
         final modelString = provider.name == 'openai-responses'
