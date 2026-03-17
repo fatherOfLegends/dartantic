@@ -23,7 +23,7 @@ void main() {
   final hasXaiKey = (Platform.environment['XAI_API_KEY'] ?? '')
       .trim()
       .isNotEmpty;
-  final imageModel =
+  final imageModelName =
       (Platform.environment['XAI_MEDIA_TEST_MODEL'] ?? defaultImageModel)
           .trim();
   final videoModel =
@@ -32,7 +32,6 @@ void main() {
 
   group('xAI Media Generation E2E', () {
     late XAIResponsesProvider provider;
-    late MediaGenerationModel model;
 
     setUp(() {
       final apiKey = Platform.environment['XAI_API_KEY'];
@@ -40,13 +39,17 @@ void main() {
         throw StateError('XAI_API_KEY environment variable not set');
       }
       provider = XAIResponsesProvider(apiKey: apiKey);
-      model = provider.createMediaModel(name: imageModel);
     });
 
     test(
       'generates an image asset or link',
       () async {
-        final stream = model.generateMediaStream(
+        final mimeTypes = ['image/png'];
+        final imageModel = provider.createMediaModel(
+          name: imageModelName,
+          mimeTypes: mimeTypes,
+        );
+        final stream = imageModel.generateMediaStream(
           'Generate a simple flat illustration of a blue robot mascot.',
           mimeTypes: ['image/png'],
         );
@@ -75,11 +78,15 @@ void main() {
         const testImagePath = 'test/files/robot_bw.png';
         final imageBytes = await File(testImagePath).readAsBytes();
         final imagePart = DataPart(imageBytes, mimeType: 'image/png');
-
-        final stream = model.generateMediaStream(
+        final mimeTypes = ['image/png'];
+        final imageModel = provider.createMediaModel(
+          name: imageModelName,
+          mimeTypes: mimeTypes,
+        );
+        final stream = imageModel.generateMediaStream(
           'Colorize this robot. Keep outlines black, make body blue, '
           'eyes green.',
-          mimeTypes: ['image/png'],
+          mimeTypes: mimeTypes,
           attachments: [imagePart],
         );
 
@@ -109,13 +116,15 @@ void main() {
         final videoProvider = XAIResponsesProvider(
           apiKey: Platform.environment['XAI_API_KEY'],
         );
+        final mimeTypes = ['video/mp4'];
         final videoMediaModel = videoProvider.createMediaModel(
           name: videoModel,
+          mimeTypes: mimeTypes,
         );
 
         final stream = videoMediaModel.generateMediaStream(
           'Create a 1 second looping animation of a rotating neon cube.',
-          mimeTypes: ['video/mp4'],
+          mimeTypes: mimeTypes,
           options: const XAIResponsesMediaGenerationModelOptions(
             n: 1,
             durationSeconds: 1,
