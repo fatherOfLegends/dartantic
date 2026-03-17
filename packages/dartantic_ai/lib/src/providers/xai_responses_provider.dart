@@ -85,6 +85,7 @@ class XAIResponsesProvider
       );
     }
     final modelName = name ?? defaultModelNames[ModelKind.chat]!;
+    final include = _resolveInclude(enableThinking, options?.include);
 
     _logger.info(
       'Creating xAI Responses chat model: $modelName '
@@ -103,7 +104,7 @@ class XAIResponsesProvider
         maxOutputTokens: options?.maxOutputTokens,
         store: options?.store ?? true,
         metadata: options?.metadata,
-        include: options?.include,
+        include: include,
         parallelToolCalls: options?.parallelToolCalls,
         reasoning: options?.reasoning,
         reasoningEffort: options?.reasoningEffort,
@@ -178,5 +179,18 @@ class XAIResponsesProvider
     if (apiKeyName != null && (apiKey == null || apiKey!.isEmpty)) {
       throw ArgumentError('$apiKeyName is required for $displayName provider');
     }
+  }
+
+  static List<String>? _resolveInclude(
+    bool enableThinking,
+    List<String>? include,
+  ) {
+    if (!enableThinking) return include;
+    const encryptedReasoningField = 'reasoning.encrypted_content';
+    final merged = <String>{
+      ...(include ?? const <String>[]),
+      encryptedReasoningField,
+    }.toList(growable: false);
+    return merged;
   }
 }

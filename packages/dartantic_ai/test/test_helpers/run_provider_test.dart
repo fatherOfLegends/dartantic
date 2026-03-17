@@ -115,7 +115,6 @@ const providerTestCaps = <String, Set<ProviderTestCaps>>{
     ProviderTestCaps.typedOutput,
     ProviderTestCaps.typedOutputWithTools,
     ProviderTestCaps.chatVision,
-    ProviderTestCaps.thinking,
     ProviderTestCaps.imageGeneration,
     ProviderTestCaps.videoGeneration,
   },

@@ -97,5 +97,59 @@ void main() {
         contains(OpenAIServerSideTool.imageGeneration),
       );
     });
+
+    test('skips unknown custom tool output item parse errors', () {
+      final shouldSkip =
+          XAIResponsesChatModel.shouldSkipStreamParseErrorForTesting(
+            error: const FormatException(
+              'Unknown OutputItem type: custom_tool_call',
+            ),
+            stackTrace: StackTrace.current,
+            json: <String, dynamic>{
+              'type': 'response.output_item.added',
+              'item': <String, dynamic>{'type': 'custom_tool_call'},
+            },
+            type: 'response.output_item.added',
+          );
+
+      expect(shouldSkip, isTrue);
+    });
+
+    test('does not skip unrelated parse errors', () {
+      final shouldSkip =
+          XAIResponsesChatModel.shouldSkipStreamParseErrorForTesting(
+            error: const FormatException('Unexpected payload shape'),
+            stackTrace: StackTrace.current,
+            json: <String, dynamic>{
+              'type': 'response.output_text.delta',
+              'delta': 'hello',
+            },
+            type: 'response.output_text.delta',
+          );
+
+      expect(shouldSkip, isFalse);
+    });
+
+    test('skips unknown custom tool item in response.completed payload', () {
+      final shouldSkip =
+          XAIResponsesChatModel.shouldSkipStreamParseErrorForTesting(
+            error: const FormatException(
+              'Unknown OutputItem type: custom_tool_call',
+            ),
+            stackTrace: StackTrace.current,
+            json: <String, dynamic>{
+              'type': 'response.completed',
+              'response': <String, dynamic>{
+                'output': <Map<String, dynamic>>[
+                  <String, dynamic>{'type': 'message'},
+                  <String, dynamic>{'type': 'custom_tool_call'},
+                ],
+              },
+            },
+            type: 'response.completed',
+          );
+
+      expect(shouldSkip, isTrue);
+    });
   });
 }
