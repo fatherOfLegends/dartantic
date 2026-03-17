@@ -11,7 +11,7 @@
 import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:test/test.dart';
 
-import 'test_helpers/run_provider_test.dart';
+import 'test_helpers/run_provider.dart';
 
 void main() {
   group('Usage Tracking', () {
@@ -74,9 +74,7 @@ void main() {
         (provider) async {
           final agent = Agent(provider.name);
 
-          final result = await agent.send(
-            'Write exactly: "Usage test for ${provider.name}"',
-          );
+          final result = await agent.send('What is 2+2?');
 
           // ALL providers MUST provide usage information
           expect(

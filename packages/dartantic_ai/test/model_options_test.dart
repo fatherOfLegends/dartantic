@@ -13,7 +13,7 @@ import 'dart:convert';
 import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:test/test.dart';
 
-import 'test_helpers/run_provider_test.dart';
+import 'test_helpers/run_provider.dart';
 
 void main() {
   group('Model Options', () {
@@ -54,6 +54,8 @@ void main() {
           final result = await agent.send('Say exactly: "Temperature test"');
           expect(result.output, isNotEmpty);
         },
+        // These providers modern models don't support temperature
+        skipProviders: {'xai-responses', 'xai'},
       );
     });
 

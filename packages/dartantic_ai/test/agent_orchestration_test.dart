@@ -11,7 +11,7 @@
 import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:test/test.dart';
 
-import 'test_helpers/run_provider_test.dart';
+import 'test_helpers/run_provider.dart';
 import 'test_tools.dart';
 
 void main() {
@@ -38,18 +38,24 @@ void main() {
         expect(agent.displayName, equals('Test Assistant'));
       });
 
-      runProviderTest('agent with temperature setting', (provider) async {
-        // Note: gpt-5 (default for openai-responses) is a reasoning model that
-        // doesn't support the temperature parameter, so we use gpt-4o instead.
-        final modelString = provider.name == 'openai-responses'
-            ? 'openai-responses:gpt-4o'
-            : provider.name;
-        final agent = Agent(modelString, temperature: 0.5);
+      runProviderTest(
+        'agent with temperature setting',
+        (provider) async {
+          // Note: gpt-5 (default for openai-responses) is a reasoning model
+          // that doesn't support the temperature parameter, so we use
+          // gpt-4o instead.
+          final modelString = provider.name == 'openai-responses'
+              ? 'openai-responses:gpt-4o'
+              : provider.name;
+          final agent = Agent(modelString, temperature: 0.5);
 
-        // Test that temperature is applied correctly
-        final result = await agent.send('Say exactly "test"');
-        expect(result.output, isNotEmpty);
-      });
+          // Test that temperature is applied correctly
+          final result = await agent.send('Say exactly "test"');
+          expect(result.output, isNotEmpty);
+        },
+        // These providers modern models don't support temperature
+        skipProviders: {'xai-responses', 'xai'},
+      );
 
       runProviderTest('agent with system message in history', (provider) async {
         final agent = Agent(provider.name);

@@ -241,16 +241,9 @@ class XAIResponsesChatModel extends ChatModel<XAIResponsesChatModelOptions> {
         try {
           event = openai.ResponseStreamEvent.fromJson(json);
         } on Object catch (error, stackTrace) {
-          // xAI MCP output item payloads can differ from OpenAI's expected
-          // schema in openai_dart (e.g., nullable fields typed as required),
-          // which can throw during JSON -> typed event parsing.
-          final looksLikeMcp =
-              error is TypeError &&
-              (_looksLikeMcpTypeError(error, json, type) ||
-                  stackTrace.toString().contains('McpCallOutputItem'));
-          if (looksLikeMcp) {
+          if (_shouldSkipStreamParseError(error, stackTrace, json, type)) {
             _logger.fine(
-              'Skipping MCP event that openai_dart cannot parse: $type',
+              'Skipping xAI event that openai_dart cannot parse: $type',
             );
             continue;
           }
@@ -288,6 +281,89 @@ class XAIResponsesChatModel extends ChatModel<XAIResponsesChatModelOptions> {
 
     return false;
   }
+
+  static bool _shouldSkipStreamParseError(
+    Object error,
+    StackTrace stackTrace,
+    Map<String, dynamic> json,
+    String? type,
+  ) {
+    // xAI MCP output item payloads can differ from OpenAI's expected schema
+    // in openai_dart (e.g., nullable fields typed as required), which can
+    // throw during JSON -> typed event parsing.
+    if (error is TypeError &&
+        (_looksLikeMcpTypeError(error, json, type) ||
+            stackTrace.toString().contains('McpCallOutputItem'))) {
+      return true;
+    }
+
+    // xAI can emit native "custom_tool_call" output items that are currently
+    // unknown to openai_dart. Skip these transport-level events while still
+    // processing the rest of the stream.
+    if (error is FormatException &&
+        _looksLikeUnknownCustomOrMcpOutputItem(error, json, type)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  static bool _looksLikeUnknownCustomOrMcpOutputItem(
+    FormatException error,
+    Map<String, dynamic> json,
+    String? type,
+  ) {
+    final message = error.message.toLowerCase();
+    if (!message.contains('unknown outputitem type')) {
+      return false;
+    }
+
+    final eventType = type?.toLowerCase();
+    if (eventType != null && eventType.contains('custom_tool')) {
+      return true;
+    }
+    if (eventType != null && eventType.contains('mcp')) {
+      return true;
+    }
+
+    return _containsCustomOrMcpOutputType(json);
+  }
+
+  static bool _containsCustomOrMcpOutputType(Object? value) {
+    if (value is Map<String, dynamic>) {
+      final type = (value['type'] as String?)?.toLowerCase();
+      if (type != null &&
+          (type.startsWith('custom_') || type.contains('mcp'))) {
+        return true;
+      }
+      for (final entry in value.entries) {
+        if (_containsCustomOrMcpOutputType(entry.value)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    if (value is List) {
+      for (final item in value) {
+        if (_containsCustomOrMcpOutputType(item)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    return false;
+  }
+
+  /// Exposes parse skip classification for focused unit tests.
+  @visibleForTesting
+  static bool shouldSkipStreamParseErrorForTesting({
+    required Object error,
+    required StackTrace stackTrace,
+    required Map<String, dynamic> json,
+    required String? type,
+  }) => _shouldSkipStreamParseError(error, stackTrace, json, type);
 
   static OpenAIResponsesChatModelOptions _toOpenAIOptionsStatic(
     XAIResponsesChatModelOptions? options,

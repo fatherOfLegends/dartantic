@@ -12,7 +12,7 @@ void main() {
       expect(provider.defaultModelNames[ModelKind.chat], isNotNull);
       expect(
         provider.defaultModelNames[ModelKind.media],
-        equals(XAIResponsesProvider.defaultMediaModel),
+        equals(XAIResponsesProvider.defaultImageModel),
       );
       expect(provider.defaultModelNames[ModelKind.embeddings], isNull);
     });
@@ -30,9 +30,9 @@ void main() {
 
       expect(provider.createEmbeddingsModel, throwsA(isA<UnsupportedError>()));
 
-      final mediaModel = provider.createMediaModel();
+      final mediaModel = provider.createMediaModel(mimeTypes: ['image/png']);
       expect(mediaModel, isA<XAIResponsesMediaGenerationModel>());
-      expect(mediaModel.name, equals(XAIResponsesProvider.defaultMediaModel));
+      expect(mediaModel.name, equals(XAIResponsesProvider.defaultImageModel));
     });
 
     test('requires api key to create media model', () {
@@ -48,5 +48,55 @@ void main() {
         ),
       );
     });
+
+    test('rejects temperature for chat model creation', () {
+      final provider = XAIResponsesProvider(apiKey: 'test-key');
+
+      expect(
+        () => provider.createChatModel(temperature: 0.2),
+        throwsA(isA<UnsupportedError>()),
+      );
+
+      expect(
+        () => provider.createChatModel(
+          options: const XAIResponsesChatModelOptions(temperature: 0.2),
+        ),
+        throwsA(isA<UnsupportedError>()),
+      );
+    });
+
+    test(
+      'enableThinking adds encrypted reasoning include by default',
+      () {
+        final provider = XAIResponsesProvider(apiKey: 'test-key');
+        final model = provider.createChatModel(
+          enableThinking: true,
+        ) as XAIResponsesChatModel;
+
+        expect(
+          model.defaultOptions.include,
+          contains('reasoning.encrypted_content'),
+        );
+      },
+    );
+
+    test(
+      'enableThinking preserves existing include entries',
+      () {
+        final provider = XAIResponsesProvider(apiKey: 'test-key');
+        final model = provider.createChatModel(
+          enableThinking: true,
+          options: const XAIResponsesChatModelOptions(
+            include: ['foo.bar'],
+          ),
+        ) as XAIResponsesChatModel;
+
+        expect(model.defaultOptions.include, contains('foo.bar'));
+        expect(
+          model.defaultOptions.include,
+          contains('reasoning.encrypted_content'),
+        );
+      },
+    );
   });
 }
