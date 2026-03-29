@@ -1,16 +1,30 @@
-## Unreleased
+## 3.3.0
+
+### Dependencies
+
+- **`dartantic_interface` ^4.0.0** — adds `ModelKind.video` for video generation in
+  model discovery. Exhaustive `switch`es on `ModelKind` must handle `video` or use
+  a `default` branch (see the `dartantic_interface` changelog).
 
 ### Added
 
+- **Google (Gemini) — URL Context server-side tool** — `GoogleServerSideTool.urlContext`
+  in `GoogleChatModelOptions.serverSideTools` enables Gemini URL context so the
+  model can retrieve and use content from allowed URLs. 
 - **xAI (Grok)** — `xai` provider (alias `grok`) using the OpenAI-compatible chat
   completions API at `https://api.x.ai/v1`, API key `XAI_API_KEY`. Chat, vision,
   tools, streaming, and typed output; embeddings and `temperature` are not
   supported in Dartantic for this provider.
 - **xAI Responses** — `xai-responses` provider (alias `grok-responses`) using
   xAI’s Responses API with the same base URL and `XAI_API_KEY`. Supports
-  thinking, server-side tools (including web search, X search, file search, code
-  interpreter, MCP), and media generation defaults `grok-imagine-image` /
-  `grok-imagine-video`.
+  thinking, server-side tools (web search, X search, file search, code
+  interpreter, MCP), and native xAI image/video media generation with defaults
+  `grok-imagine-image` / `grok-imagine-video`.
+
+### Documentation
+
+- Provider and quick-start docs (including xAI), environment setup, README
+  cross-links, and related wiki/docs site updates.
 
 ## 3.2.0
 

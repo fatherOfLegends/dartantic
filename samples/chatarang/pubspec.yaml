@@ -10,7 +10,7 @@ dependencies:
   all_lint_rules_community: ^0.0.43
   cli_repl: ^0.2.3
   dartantic_ai: ^3.0.0
-  dartantic_interface: ^3.0.0
+  dartantic_interface: ^4.0.0
   http: ^1.6.0
 
 dev_dependencies:

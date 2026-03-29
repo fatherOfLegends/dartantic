@@ -193,11 +193,18 @@ if (hasEmbeddings) {
 
 ### Model Kinds
 
-Models are categorized by their kind via `ModelKind`:
+Models are categorized by their kind via `ModelKind` (a model may report multiple
+kinds):
 
-- **`chat`** - Chat conversations
-- **`embeddings`** - Vector embeddings
-- **`media`** - Media generation (images, documents, etc.)
+- **`chat`** - Chat / completion models
+- **`embeddings`** - Text embedding models
+- **`media`** - Unified media generation (images, documents, audio, etc.)
+- **`image`** - Image generation or vision models
+- **`video`** - Video generation models
+- **`audio`** - Audio processing (e.g. speech-to-text)
+- **`tts`** - Text-to-speech
+- **`countTokens`** - Token counting
+- **`other`** - Other specialized model types
 
 ### Typed Output With Tools
 

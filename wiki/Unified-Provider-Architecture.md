@@ -48,14 +48,14 @@ Key characteristics:
 - Generic type parameters for chat and embeddings options
 - Required properties: name, displayName, defaultModelNames, capabilities
 - Optional properties: apiKey, baseUrl, apiKeyName, aliases
-- Factory methods: createChatModel() and createEmbeddingsModel()
+- Factory methods: createChatModel(), createEmbeddingsModel(), and createMediaModel()
 - Discovery method: listModels() stream
 
 The Provider base class unifies what were previously separate ChatProvider and EmbeddingsProvider types into a single interface that can create both model types.
 
 ### Model Kinds
 
-The `ModelKind` enum (see `lib/src/providers/model_kind.dart`) defines the types of models a provider can support. Currently implemented kinds are `chat` and `embeddings`, with placeholders for future expansion (tts, image, audio, etc.).
+The `ModelKind` enum (see `packages/dartantic_interface/lib/src/model/model_kind.dart`) classifies models for discovery and defaults. Values include `chat`, `media`, `image`, `video`, `embeddings`, `audio`, `tts`, `countTokens`, and `other`.
 
 This enum is used in the `defaultModelNames` map to specify different default models for each capability.
 

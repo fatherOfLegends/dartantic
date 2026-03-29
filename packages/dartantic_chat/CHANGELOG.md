@@ -1,3 +1,9 @@
+## 0.3.0
+
+- Requires `dartantic_interface` ^4.0.0 and `dartantic_ai` ^3.3.0 (stack aligned
+  with `dartantic_interface` 4.0.0 and `ModelKind.video`). See those packages’
+  changelogs if you switch exhaustively on `ModelKind`.
+
 ## 0.2.0
 
 - Thanks for @DeTuksa for another great chat feature: drag 'n' drop!

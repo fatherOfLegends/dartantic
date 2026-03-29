@@ -1,3 +1,11 @@
+## 4.0.0
+
+### Breaking change: `ModelKind.video`
+
+Added `ModelKind.video` for classifying video generation models in provider
+discovery and defaults. Exhaustive `switch`es on `ModelKind` must include this
+value (or a default branch).
+
 ## 3.0.0
 
 ### Streaming Thinking via `ChatResult.thinking`

@@ -1,3 +1,9 @@
+## 0.2.0
+
+- Requires `dartantic_interface` ^4.0.0 (`ModelKind.video` and related discovery
+  updates). See the `dartantic_interface` 4.0.0 changelog if you switch
+  exhaustively on `ModelKind`.
+
 ## 0.1.0
 
 - Initial release of `dartantic_firebase_ai`, a Flutter-only Firebase AI provider
