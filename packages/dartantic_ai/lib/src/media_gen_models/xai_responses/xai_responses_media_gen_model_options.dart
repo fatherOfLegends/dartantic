@@ -47,5 +47,5 @@ class XAIResponsesMediaGenerationModelOptions
   final String? user;
 
   /// List of MIME types to generate.
-  final List<String>? mimeTypes;
+  final List<String> mimeTypes;
 }

@@ -143,9 +143,11 @@ class XAIResponsesProvider
     XAIResponsesMediaGenerationModelOptions? options,
   }) {
     _validateApiKeyPresence();
-    final mimeTypes = options?.mimeTypes;
-    assert(mimeTypes != null && mimeTypes.isNotEmpty);
-    final everyIsImage = mimeTypes!.every((m) => m.startsWith('image/'));
+    final resolvedOptions =
+        options ?? const XAIResponsesMediaGenerationModelOptions();
+    final mimeTypes = resolvedOptions.mimeTypes;
+    assert(mimeTypes.isNotEmpty);
+    final everyIsImage = mimeTypes.every((m) => m.startsWith('image/'));
     final everyIsVideo = mimeTypes.every((m) => m.startsWith('video/'));
     final eitherAnImageOrVideo = everyIsImage || everyIsVideo;
     if (!eitherAnImageOrVideo) {
