@@ -15,6 +15,8 @@ import '../providers/mistral_provider.dart';
 import '../providers/ollama_provider.dart';
 import '../providers/openai_provider.dart';
 import '../providers/openai_responses_provider.dart';
+import '../providers/xai_provider.dart';
+import '../providers/xai_responses_provider.dart';
 import 'agent_response_accumulator.dart';
 import 'media_response_accumulator.dart';
 import 'model_string_parser.dart';
@@ -462,6 +464,7 @@ class Agent {
       name: _mediaModelName,
       tools: _tools,
       options: mediaModelOptions,
+      mimeTypes: mimeTypes,
     );
 
     final newUserMessage = ChatMessage.user(prompt, parts: attachments);
@@ -657,6 +660,14 @@ class Agent {
 
     // OpenRouter
     'openrouter': _createOpenRouterProvider,
+
+    // xAI (OpenAI-compatible Chat Completions)
+    'xai': XAIProvider.new,
+    'grok': XAIProvider.new,
+
+    // xAI Responses
+    'xai-responses': XAIResponsesProvider.new,
+    'grok-responses': XAIResponsesProvider.new,
   };
 
   static Provider _createOpenRouterProvider() => OpenAIProvider(

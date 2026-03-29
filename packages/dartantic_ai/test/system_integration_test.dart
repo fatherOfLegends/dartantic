@@ -13,7 +13,7 @@
 import 'package:dartantic_ai/dartantic_ai.dart';
 import 'package:test/test.dart';
 
-import 'test_helpers/run_provider_test.dart';
+import 'test_helpers/run_provider.dart';
 import 'test_tools.dart';
 
 void main() {
@@ -711,6 +711,7 @@ class _EchoProvider
     String? name,
     List<Tool>? tools,
     MediaGenerationModelOptions? options,
+    List<String>? mimeTypes,
   }) => throw UnsupportedError('Echo provider does not support media');
 
   @override

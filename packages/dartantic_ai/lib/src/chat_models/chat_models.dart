@@ -6,3 +6,4 @@ export 'mistral_chat/mistral_chat.dart';
 export 'ollama_chat/ollama_chat.dart';
 export 'openai_chat/openai_chat.dart';
 export 'openai_responses/openai_responses.dart';
+export 'xai_responses/xai_responses.dart';
