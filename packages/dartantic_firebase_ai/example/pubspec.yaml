@@ -18,9 +18,6 @@ dependencies:
 
   firebase_core: any
   logging: ^1.2.0
-dependency_overrides:
-  dartantic_interface:
-    path: ../../dartantic_interface
 
 dev_dependencies:
   flutter_test:
