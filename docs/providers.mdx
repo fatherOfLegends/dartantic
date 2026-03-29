@@ -3,8 +3,12 @@ title: Providers
 description: "Providers for chat and embeddings models."
 ---
 
-Out of the box support for 8 built-in providers, with more available via the
-`openai_compat.dart` example.
+The `dartantic_ai` package ships **8 built-in providers**. For **Flutter** apps
+that use Gemini through [Firebase AI Logic](https://firebase.google.com/docs/ai-logic),
+add the optional [`dartantic_firebase_ai`](https://pub.dev/packages/dartantic_firebase_ai)
+package and register it (see [Firebase AI](#firebase-ai-flutter-add-on) below).
+Additional OpenAI-compatible endpoints are available via the `openai_compat.dart`
+example.
 
 ## Provider Capabilities
 
@@ -37,6 +41,44 @@ Out of the box support for 8 built-in providers, with more available via the
 | **Cohere** | `cohere` | - | `COHERE_API_KEY` | `CohereProvider` |
 | **Ollama** | `ollama` | - | None (local) | `OllamaProvider` |
 | **OpenRouter** | `openrouter` | - | `OPENROUTER_API_KEY` | `OpenAIProvider` |
+
+## Firebase AI (Flutter add-on)
+
+Use [`dartantic_firebase_ai`](https://pub.dev/packages/dartantic_firebase_ai) when
+you want Gemini through the Firebase SDK (Firebase AI Logic), including App Check
+and Firebase Auth on the Vertex AI path. **Pure Dart** apps should keep using
+[`GoogleProvider`](/providers) with `GEMINI_API_KEY` instead.
+
+Add the package, call `Firebase.initializeApp()`, then register factories for
+each backend you need. Provider **name** is `firebase_ai`; model strings use the
+**aliases** below.
+
+| Backend | Prefix (alias) | Authentication / setup |
+|---------|----------------|-------------------------|
+| Google AI (Gemini Developer API via Firebase) | `firebase-google` | Google AI API key in Firebase console; lighter setup |
+| Vertex AI (through Firebase) | `firebase-vertex` | Full Firebase project, billing; optional App Check / Auth |
+
+```dart
+import 'package:dartantic_ai/dartantic_ai.dart';
+import 'package:dartantic_firebase_ai/dartantic_firebase_ai.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+await Firebase.initializeApp();
+
+Agent.providerFactories['firebase-google'] = () =>
+    FirebaseAIProvider(backend: FirebaseAIBackend.googleAI);
+Agent.providerFactories['firebase-vertex'] = () =>
+    FirebaseAIProvider(backend: FirebaseAIBackend.vertexAI);
+
+final dev = Agent('firebase-google:gemini-2.5-flash');
+final prod = Agent('firebase-vertex:gemini-2.5-flash');
+```
+
+**Platforms:** iOS, Android, macOS, and Web (Flutter only). Supports chat,
+streaming, tools, thinking, structured output, and media generation; **no**
+embeddings model. See the
+[`dartantic_firebase_ai` README](https://pub.dev/packages/dartantic_firebase_ai)
+for dependency versions and setup.
 
 ## Setup
 
