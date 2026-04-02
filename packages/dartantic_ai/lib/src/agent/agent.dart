@@ -466,44 +466,68 @@ class Agent {
       options: mediaModelOptions,
     );
 
-    final newUserMessage = ChatMessage.user(prompt, parts: attachments);
-    _assertNoMultipleTextParts([newUserMessage]);
+    try {
+      final newUserMessage = ChatMessage.user(prompt, parts: attachments);
+      _assertNoMultipleTextParts([newUserMessage]);
 
-    yield MediaGenerationResult(messages: [newUserMessage], id: '');
+      yield MediaGenerationResult(messages: [newUserMessage], id: '');
 
-    // Convert history to List for the underlying model interface
-    final historyList = history.toList();
+      // Convert history to List for the underlying model interface
+      final historyList = history.toList();
 
-    await for (final chunk in model.generateMediaStream(
-      prompt,
-      mimeTypes: mimeTypes,
-      history: historyList,
-      attachments: attachments,
-      options: options ?? mediaModelOptions,
-      outputSchema: outputSchema,
-    )) {
-      if (chunk.messages.isNotEmpty) {
-        _assertNoMultipleTextParts(chunk.messages);
+      await for (final chunk in model.generateMediaStream(
+        prompt,
+        mimeTypes: mimeTypes,
+        history: historyList,
+        attachments: attachments,
+        options: options ?? mediaModelOptions,
+        outputSchema: outputSchema,
+      )) {
+        if (chunk.messages.isNotEmpty) {
+          _assertNoMultipleTextParts(chunk.messages);
+        }
+        yield chunk;
       }
-      yield chunk;
+    } finally {
+      model.dispose();
     }
   }
 
   /// Embed query text and return result with usage data.
-  Future<EmbeddingsResult> embedQuery(String query) => _provider
-      .createEmbeddingsModel(
-        name: _embeddingsModelName,
-        options: embeddingsModelOptions,
-      )
-      .embedQuery(query);
+  Future<EmbeddingsResult> embedQuery(String query) async {
+    final model = _provider.createEmbeddingsModel(
+      name: _embeddingsModelName,
+      options: embeddingsModelOptions,
+    );
+    try {
+      final result = await model.embedQuery(query);
+      _logger.info(
+        'Embedding query completed with ${result.output.length} dimensions, '
+        '${result.usage?.totalTokens ?? 0} tokens',
+      );
+      return result;
+    } finally {
+      model.dispose();
+    }
+  }
 
   /// Embed texts and return results with usage data.
-  Future<BatchEmbeddingsResult> embedDocuments(List<String> texts) => _provider
-      .createEmbeddingsModel(
-        name: _embeddingsModelName,
-        options: embeddingsModelOptions,
-      )
-      .embedDocuments(texts);
+  Future<BatchEmbeddingsResult> embedDocuments(List<String> texts) async {
+    final model = _provider.createEmbeddingsModel(
+      name: _embeddingsModelName,
+      options: embeddingsModelOptions,
+    );
+    try {
+      final result = await model.embedDocuments(texts);
+      _logger.info(
+        'Embedding documents completed with ${result.output.length} embeddings,'
+        ' ${result.usage?.totalTokens ?? 0} tokens',
+      );
+      return result;
+    } finally {
+      model.dispose();
+    }
+  }
 
   /// Asserts that no message in the iterable contains more than one TextPart.
   ///
