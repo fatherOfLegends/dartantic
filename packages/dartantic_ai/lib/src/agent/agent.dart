@@ -494,21 +494,36 @@ class Agent {
   }
 
   /// Embed query text and return result with usage data.
-  Future<EmbeddingsResult> embedQuery(String query) => _provider
-      .createEmbeddingsModel(
-        name: _embeddingsModelName,
-        options: embeddingsModelOptions,
-      )
-      .embedQuery(query);
-
-  /// Embed texts and return results with usage data.
-  Future<BatchEmbeddingsResult> embedDocuments(List<String> texts) {
+  Future<EmbeddingsResult> embedQuery(String query) async {
     final model = _provider.createEmbeddingsModel(
       name: _embeddingsModelName,
       options: embeddingsModelOptions,
     );
     try {
-      return model.embedDocuments(texts);
+      final result = await model.embedQuery(query);
+      _logger.info(
+        'Embedding query completed with ${result.output.length} dimensions, '
+        '${result.usage?.totalTokens ?? 0} tokens',
+      );
+      return result;
+    } finally {
+      model.dispose();
+    }
+  }
+
+  /// Embed texts and return results with usage data.
+  Future<BatchEmbeddingsResult> embedDocuments(List<String> texts) async {
+    final model = _provider.createEmbeddingsModel(
+      name: _embeddingsModelName,
+      options: embeddingsModelOptions,
+    );
+    try {
+      final result = await model.embedDocuments(texts);
+      _logger.info(
+        'Embedding documents completed with ${result.output.length} embeddings,'
+        ' ${result.usage?.totalTokens ?? 0} tokens',
+      );
+      return result;
     } finally {
       model.dispose();
     }

@@ -60,6 +60,6 @@ GoogleAIClient createGoogleAiClient({
       authProvider: ApiKeyProvider(apiKey, placement: AuthPlacement.header),
       defaultHeaders: extraHeaders,
     ),
-    httpClient: httpClient ?? http.Client(),
+    httpClient: httpClient,
   );
 }

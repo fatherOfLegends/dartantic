@@ -151,7 +151,6 @@ class GoogleProvider
       apiKey: key,
       configuredBaseUrl: resolvedBaseUrl,
       extraHeaders: headers,
-      httpClient: RetryHttpClient(inner: http.Client()),
     );
     try {
       String? pageToken;
@@ -210,7 +209,6 @@ class GoogleProvider
       apiKey: apiKey!,
       configuredBaseUrl: resolvedBaseUrl,
       extraHeaders: headers,
-      httpClient: RetryHttpClient(inner: http.Client()),
     );
 
     final chatOptions = GoogleChatModelOptions(
