@@ -139,7 +139,6 @@ class OpenAIResponsesProvider
     String? name,
     List<Tool>? tools,
     OpenAIResponsesMediaGenerationModelOptions? options,
-    List<String>? mimeTypes,
   }) {
     validateApiKeyPresence();
     final modelName = name ?? defaultModelNames[ModelKind.media]!;

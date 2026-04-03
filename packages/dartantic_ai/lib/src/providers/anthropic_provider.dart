@@ -201,7 +201,6 @@ class AnthropicProvider
     String? name,
     List<Tool>? tools,
     AnthropicMediaGenerationModelOptions? options,
-    List<String>? mimeTypes,
   }) {
     if (apiKeyName != null && (apiKey == null || apiKey!.isEmpty)) {
       throw ArgumentError('$apiKeyName is required for $displayName provider');

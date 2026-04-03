@@ -73,7 +73,6 @@ abstract class OpenAIProviderBase<
     String? name,
     List<Tool>? tools,
     TMediaOptions? options,
-    List<String>? mimeTypes,
   }) {
     throw UnsupportedError('$displayName does not support media generation.');
   }
